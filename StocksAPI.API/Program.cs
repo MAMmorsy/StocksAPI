@@ -87,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/Stocks/swagger.json", "STOCK APIs");
+        c.SwaggerEndpoint("/swagger/Stocks/swagger.json", "Stocks API");
 
     });
 }

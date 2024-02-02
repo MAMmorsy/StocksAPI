@@ -9,7 +9,6 @@ namespace StocksAPI.CORE.Interfaces.Services
 {
     public interface IAccountService
     {
-        // Get user details (used for Login)
         Task<Response<LoginUserDataDto>> LoginUser(LoginDto loginDto);
         Task<Response<bool>> CreateUser(UserCreateDTO createDTO);
         Task<Response<bool>> UpdateUser(UserUpdateDTO updateDto);

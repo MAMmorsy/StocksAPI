@@ -9,6 +9,7 @@ namespace StocksAPI.API.Utilities.DependenciesResolver
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace StocksAPI.SERVICES.Validators
 {
-    internal class UserSelectValidator : AbstractValidator<UserSearchDTO>
+    internal class ProductSearchValidator : AbstractValidator<ProductSearchDTO>
     {
-        public UserSelectValidator()
+        public ProductSearchValidator()
         {
             RuleFor(m => m)
                    .NotNull().WithMessage("Please fill the required data");
-            RuleFor(m => m.UserId)
+            RuleFor(m => m.StoreId)
                     .Cascade(CascadeMode.Stop)
-                    .NotEmpty().WithMessage("Please fill user id")
-                    .NotNull().WithMessage("Please fill user id")
-                    .Must(s => s != 0).WithMessage("Error in user id");
+                    .NotEmpty().WithMessage("Please fill store id")
+                    .NotNull().WithMessage("Please fill store id")
+                    .Must(s => s != 0).WithMessage("Error in store id");
         }
     }
 }

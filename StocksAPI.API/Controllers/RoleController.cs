@@ -12,6 +12,7 @@ namespace StocksAPI.API.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "Stocks")]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

@@ -75,7 +75,8 @@ namespace StocksAPI.SERVICES.Services
                     return response;
                 }
                 Expression<Func<User, bool>> condition = e => e.UserId == userSearchDto.UserId && e.Deleted==false;
-                User? userData = await _userRepository.FindAsync(condition, null);
+                string[] includes = new string[] { "Role" };
+                User? userData = await _userRepository.FindAsync(condition, includes);
                 if (userData == null)
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;
@@ -113,7 +114,8 @@ namespace StocksAPI.SERVICES.Services
                 {
                     condition = e => e.RoleId == listSearchDto.RoleId && e.Deleted == false;
                 }
-                List<User>? userList = (List<User>?)await _userRepository.FindAllAsync(condition, null, null, s => s.DisplayName, OrderBy.Ascending);
+                string[] includes = new string[] { "Role" };
+                List<User>? userList = (List<User>?)await _userRepository.FindAllAsync(condition, includes);
                 if (userList == null || userList.Count == 0)
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;
