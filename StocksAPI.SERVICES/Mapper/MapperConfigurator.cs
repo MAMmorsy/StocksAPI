@@ -14,6 +14,7 @@ namespace StocksAPI.SERVICES.Mapper
                 StoreDataMapper.ConfigureMapping(mapperConfigs);
                 UnitsDataMapper.ConfigureMapping(mapperConfigs);
                 UserDataMapper.ConfigureMapping(mapperConfigs);
+                InvoiceDataMapper.ConfigureMapping(mapperConfigs);
             });
             return mapperConfiguration;
         }

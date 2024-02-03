@@ -42,22 +42,26 @@ namespace StocksAPI.SERVICES.Services
                     response.IsSucceded = false;
                     return response;
                 }
-                User user = _mapper.Map<User>(createDTO);
-                Expression<Func<User, bool>> condition = e => e.UserName == createDTO.UserName && e.Deleted==false;
-                // Check if user name existing before
-                User? userData = await _userRepository.FindAsync(condition);
-                if (userData == null)
+                Invoice invoice = _mapper.Map<Invoice>(createDTO);
+                List<InvoiceItem> invoiceItem = _mapper.Map<List<InvoiceItem>>(createDTO.items);
+                Expression<Func<Invoice, bool>> condition = e => e.InvoiceNo == createDTO.InvoiceNo && e.Deleted==false;
+                // Check if invoice number existing before
+                Invoice? invoiceData = await _invoiceRepository.FindAsync(condition);
+                if (invoiceData == null)
                 {
                     using (var transaction = _unitOfWork.BeginTransaction())
                     {
                         try
                         {
-                            // Insert new Details
-                            user.Datein = DateTime.Now;
-                            user.Deleted = false;
-                            await _userRepository.AddAsync(user);
+                            // Insert new invoice
+                            invoice.Datein = DateTime.Now;
+                            invoice.Deleted = false;
+                            await _invoiceRepository.AddAsync(invoice);
+                            //response.Data = _unitOfWork.SaveChanges() >= 1;
+                            invoiceItem.ForEach(e => { e.Datein = DateTime.Now; e.Deleted=false; e.InvoiceId=invoice.InvoiceId; });
+                            await _itemRepository.AddRangeAsync(invoiceItem);
                             response.Data = _unitOfWork.SaveChanges() >= 1;
-                            response.Errors?.Add(new Error() { ErrorMessage = "User created." });
+                            response.Errors?.Add(new Error() { ErrorMessage = "Invoice created." });
                             response.ResponseCode = (int)ResponseCodesEnum.SaveAllRecords;
                             transaction.Commit();
                         }
@@ -73,7 +77,7 @@ namespace StocksAPI.SERVICES.Services
                 else
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.ExistingData;
-                    response.Errors?.Add(new Error() { ErrorMessage = "User Name already exists." });
+                    response.Errors?.Add(new Error() { ErrorMessage = "Invoice number already exists." });
                     response.IsSucceded = false;
                 }
             }
