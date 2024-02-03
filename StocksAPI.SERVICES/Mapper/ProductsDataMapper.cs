@@ -17,6 +17,10 @@ namespace StocksAPI.SERVICES.Mapper
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductUnit.ProductId))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductUnit.Product.ProductName))
                 .ReverseMap();
+            mapperConfigs.CreateMap<StoreProduct, ProductQuantityListDTO>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductUnit.ProductId))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ReverseMap();
         }
     }
 }

@@ -10,5 +10,6 @@ namespace StocksAPI.CORE.Interfaces.Services
     public interface IProductService
     {
         Task<Response<List<ProductsListDTO>>> GetProductsByStockId(ProductSearchDTO productSearchDto);
+        Task<Response<ProductQuantityListDTO>> GetProductQuantityByStockAndUnit(ProductQuantitySearchDTO productQuantitySearchDto);
     }
 }

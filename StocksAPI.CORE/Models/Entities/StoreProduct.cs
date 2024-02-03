@@ -23,5 +23,10 @@ namespace StocksAPI.CORE.Models.Entities
         [ForeignKey("StoreId")]
         [InverseProperty("StoreProducts")]
         public virtual Store Store { get; set; } = null!;
+
+        public static explicit operator List<object>(StoreProduct v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

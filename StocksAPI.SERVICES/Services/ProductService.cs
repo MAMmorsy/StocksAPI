@@ -24,6 +24,46 @@ namespace StocksAPI.SERVICES.Services
             _mapper = mapper;
             _productRepository = productRepository;
         }
+
+        public async Task<Response<ProductQuantityListDTO>> GetProductQuantityByStockAndUnit(ProductQuantitySearchDTO productQuantitySearchDto)
+        {
+            Response<ProductQuantityListDTO> response = new Response<ProductQuantityListDTO>();
+            try
+            {
+                response.Errors = ValidatorHandler.Validate(productQuantitySearchDto, (ProductQuantitySearchValidator)Activator.CreateInstance(typeof(ProductQuantitySearchValidator)));
+                if (response.Errors.Any())
+                {
+                    response.ResponseCode = (int)ResponseCodesEnum.InvalidParameters;
+                    response.IsSucceded = false;
+                    return response;
+                }
+
+                string[] includes = new string[] { "ProductUnit", "ProductUnit.Product" };
+                StoreProduct? productsList = (StoreProduct?)await _productRepository.FindAsync
+                    (e => e.StoreId==productQuantitySearchDto.StoreId
+                && e.Deleted==false
+                && e.ProductUnit.ProductId==productQuantitySearchDto.ProductId
+                && e.ProductUnit.UnitId==productQuantitySearchDto.UnitId, includes);
+                if (productsList == null)
+                {
+                    response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;
+                    response.Errors?.Add(new Error() { ErrorMessage = "No products found" });
+                    response.IsSucceded = true;
+                    return response;
+                }
+                var productListDto = _mapper.Map<StoreProduct, ProductQuantityListDTO>(productsList);
+                response.Data = productListDto;
+                response.ResponseCode = (int)ResponseCodesEnum.SuccessWithData;
+            }
+            catch (Exception ex)
+            {
+                response.ResponseCode = (int)ResponseCodesEnum.DbException;
+                response.Errors?.Add(new Error() { ErrorMessage = ex.Message });
+                response.IsSucceded = false;
+            }
+            return response;
+        }
+
         public async Task<Response<List<ProductsListDTO>>> GetProductsByStockId(ProductSearchDTO productSearchDto)
         {
             Response<List<ProductsListDTO>> response = new Response<List<ProductsListDTO>>();

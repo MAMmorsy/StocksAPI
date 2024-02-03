@@ -8,7 +8,7 @@ using StocksAPI.CORE.Models.DTOs;
 
 namespace StocksAPI.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("[controller]/[action]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "Stocks")]
@@ -23,22 +23,25 @@ namespace StocksAPI.API.Controllers
         }
 
         [HttpGet(Name = "GetUnits")]
-        public async Task<IActionResult> GetUnits([FromHeader] string sendData, [FromHeader] string sendData1)
+        public async Task<IActionResult> GetUnits([FromHeader] string sendData)
         {
             try
             {
-                //var generatedcsResponce = JsonConvert.DeserializeObject<EncUnitSearchDTO>(sendData);
-                //string productId = generatedcsResponce.ProductId;
-                //string decStoreId = EncryptionHelper.DecryptString(productId, _config.GetValue<string>("Pass"));
-                //UnitSearchDTO unitSearchDTO = new UnitSearchDTO
-                //{
-                //    ProductId = Convert.ToInt32(decStoreId)
-                //};
+                var generatedcsResponce = JsonConvert.DeserializeObject<EncUnitSearchDTO>(sendData);
+                string productId = generatedcsResponce.ProductId;
+                string storeId = generatedcsResponce.StoreId;
+                string decProductId = EncryptionHelper.DecryptString(productId, _config.GetValue<string>("Pass"));
+                string decStoreId = EncryptionHelper.DecryptString(storeId, _config.GetValue<string>("Pass"));
                 UnitSearchDTO unitSearchDTO = new UnitSearchDTO
                 {
-                    ProductId = Convert.ToInt32(sendData),
-                    StoreId = Convert.ToInt32(sendData1)
+                    ProductId = Convert.ToInt32(decProductId),
+                    StoreId = Convert.ToInt32(decStoreId)
                 };
+                //UnitSearchDTO unitSearchDTO = new UnitSearchDTO
+                //{
+                //    ProductId = Convert.ToInt32(sendData),
+                //    StoreId = Convert.ToInt32(sendData1)
+                //};
                 Response<List<UnitsListDTO>> unitDetailsDto = await _unitService.GetUnitsByProductId(unitSearchDTO);
                 return Ok(unitDetailsDto);
             }

@@ -9,7 +9,7 @@ using StocksAPI.SERVICES.Services;
 
 namespace StocksAPI.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("[controller]/[action]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "Stocks")]
@@ -28,18 +28,51 @@ namespace StocksAPI.API.Controllers
         {
             try
             {
-                //var generatedcsResponce = JsonConvert.DeserializeObject<EncProductSearchDTO>(sendData);
-                //string storeId = generatedcsResponce.StoreId;
-                //string decStoreId = EncryptionHelper.DecryptString(storeId, _config.GetValue<string>("Pass"));
-                //ProductSearchDTO productSearchDTO = new ProductSearchDTO
-                //{
-                //    StoreId = Convert.ToInt32(decStoreId)
-                //};
+                var generatedcsResponce = JsonConvert.DeserializeObject<EncProductSearchDTO>(sendData);
+                string storeId = generatedcsResponce.StoreId;
+                string decStoreId = EncryptionHelper.DecryptString(storeId, _config.GetValue<string>("Pass"));
                 ProductSearchDTO productSearchDTO = new ProductSearchDTO
                 {
-                    StoreId = Convert.ToInt32(sendData)
+                    StoreId = Convert.ToInt32(decStoreId)
                 };
+                //ProductSearchDTO productSearchDTO = new ProductSearchDTO
+                //{
+                //    StoreId = Convert.ToInt32(sendData)
+                //};
                 Response<List<ProductsListDTO>> productDetailsDto = await _productService.GetProductsByStockId(productSearchDTO);
+                return Ok(productDetailsDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
+        [HttpGet(Name = "GetProductQuantity")]
+        public async Task<IActionResult> GetProductQuantity([FromHeader] string sendData, [FromHeader] string store, [FromHeader] string unit)
+        {
+            try
+            {
+                var generatedcsResponce = JsonConvert.DeserializeObject<EncProductQuantitySearchDTO>(sendData);
+                string productId = generatedcsResponce.ProductId;
+                string storeId = generatedcsResponce.StoreId;
+                string unitId = generatedcsResponce.UnitId;
+                string decProductId = EncryptionHelper.DecryptString(productId, _config.GetValue<string>("Pass"));
+                string decStoreId = EncryptionHelper.DecryptString(storeId, _config.GetValue<string>("Pass"));
+                string decUnitId = EncryptionHelper.DecryptString(unitId, _config.GetValue<string>("Pass"));
+                ProductQuantitySearchDTO productSearchDTO = new ProductQuantitySearchDTO
+                {
+                    ProductId = Convert.ToInt32(decProductId),
+                    StoreId = Convert.ToInt32(decStoreId),
+                    UnitId = Convert.ToInt32(decUnitId)
+                };
+                //ProductQuantitySearchDTO productSearchDTO = new ProductQuantitySearchDTO
+                //{
+                //    ProductId = Convert.ToInt32(sendData),
+                //    StoreId = Convert.ToInt32(store),
+                //    UnitId = Convert.ToInt32(unit)
+                //};
+                Response<ProductQuantityListDTO> productDetailsDto = await _productService.GetProductQuantityByStockAndUnit(productSearchDTO);
                 return Ok(productDetailsDto);
             }
             catch (Exception ex)
