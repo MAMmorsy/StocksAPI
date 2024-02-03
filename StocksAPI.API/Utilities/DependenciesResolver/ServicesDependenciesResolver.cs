@@ -10,6 +10,8 @@ namespace StocksAPI.API.Utilities.DependenciesResolver
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IStoreService, StoreService>();
+            services.AddScoped<IUnitService, UnitService>();
         }
     }
 }

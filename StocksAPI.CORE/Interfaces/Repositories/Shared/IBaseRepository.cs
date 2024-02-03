@@ -19,6 +19,7 @@ namespace StocksAPI.CORE.Interfaces.Repositories.Shared
             Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);
 
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
+        Task<IEnumerable<T>> FindAllAsync<Y>(Expression<Func<T, bool>> criteria, string[] includes = null, Expression<Func<T, IEnumerable<Y>>> includecriteria = null);
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int skip, int take);
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int? skip, int? take,
             Expression<Func<T, object>> orderBy = null, string orderByDirection = OrderBy.Ascending);

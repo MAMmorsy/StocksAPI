@@ -8,6 +8,11 @@ namespace StocksAPI.CORE.Models.Entities
 {
     public partial class ProductUnit
     {
+        public ProductUnit()
+        {
+            StoreProducts = new HashSet<StoreProduct>();
+        }
+
         [Key]
         public int ProductUnitId { get; set; }
         public int ProductId { get; set; }
@@ -22,5 +27,7 @@ namespace StocksAPI.CORE.Models.Entities
         [ForeignKey("UnitId")]
         [InverseProperty("ProductUnits")]
         public virtual Unit Unit { get; set; } = null!;
+        [InverseProperty("ProductUnit")]
+        public virtual ICollection<StoreProduct> StoreProducts { get; set; }
     }
 }

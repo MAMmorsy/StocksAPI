@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StocksAPI.API.Utilities;
@@ -8,7 +9,8 @@ using StocksAPI.SERVICES.Services;
 
 namespace StocksAPI.API.Controllers
 {
-    [Route("api/[controller]")]
+    //[Authorize]
+    [Route("[controller]/[action]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "Stocks")]
     public class ProductController : ControllerBase
@@ -37,8 +39,8 @@ namespace StocksAPI.API.Controllers
                 {
                     StoreId = Convert.ToInt32(sendData)
                 };
-                Response<List<ProductsListDTO>> userDetailsDto = await _productService.GetProductsByStockId(productSearchDTO);
-                return Ok(userDetailsDto);
+                Response<List<ProductsListDTO>> productDetailsDto = await _productService.GetProductsByStockId(productSearchDTO);
+                return Ok(productDetailsDto);
             }
             catch (Exception ex)
             {

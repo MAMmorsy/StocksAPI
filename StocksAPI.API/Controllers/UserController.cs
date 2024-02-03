@@ -25,7 +25,6 @@ namespace StocksAPI.API.Controllers
             _config = config;
         }
 
-        // Done
         [AllowAnonymous]
         [HttpGet(Name = "UserLogin")]
         public async Task<IActionResult> UserLogin([FromHeader] string userName, [FromHeader] string password)
@@ -63,22 +62,18 @@ namespace StocksAPI.API.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet(Name = "GetUser")]
         public async Task<IActionResult> GetUser([FromHeader] string sendData)
         {
             try
             {
-                //var generatedcsResponce = JsonConvert.DeserializeObject<EncUserSearchDTO>(sendData);
-                //string userId = generatedcsResponce.UserId;
-                //string decUserId = EncryptionHelper.DecryptString(userId, _config.GetValue<string>("Pass"));
-                //UserSearchDTO userSearchDto = new UserSearchDTO
-                //{
-                //    UserId = Convert.ToInt32(decUserId)
-                //};
+                var generatedcsResponce = JsonConvert.DeserializeObject<EncUserSearchDTO>(sendData);
+                string userId = generatedcsResponce.UserId;
+                string decUserId = EncryptionHelper.DecryptString(userId, _config.GetValue<string>("Pass"));
                 UserSearchDTO userSearchDto = new UserSearchDTO
                 {
-                    UserId = Convert.ToInt32(sendData)
+                    UserId = Convert.ToInt32(decUserId)
                 };
                 Response<UserDataDTO> userDetailsDto = await _accountService.GetUser(userSearchDto);
                 return Ok(userDetailsDto);
@@ -88,24 +83,24 @@ namespace StocksAPI.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        
-        //[Authorize]
+
+        [Authorize]
         [HttpGet(Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers([FromHeader] string sendData)
         {
             try
             {
-                //var generatedcsResponce = JsonConvert.DeserializeObject<EncUserListSearchDTO>(sendData);
-                //string roleId = generatedcsResponce.RoleId;
-                //string decRoleId = EncryptionHelper.DecryptString(roleId, _config.GetValue<string>("Pass"));
-                //UserListSearchDTO userSearchDto = new UserListSearchDTO
-                //{
-                //    RoleId = Convert.ToInt32(decRoleId)
-                //};
+                var generatedcsResponce = JsonConvert.DeserializeObject<EncUserListSearchDTO>(sendData);
+                string roleId = generatedcsResponce.RoleId;
+                string decRoleId = EncryptionHelper.DecryptString(roleId, _config.GetValue<string>("Pass"));
                 UserListSearchDTO userSearchDto = new UserListSearchDTO
                 {
-                    RoleId = Convert.ToInt32(sendData)
+                    RoleId = Convert.ToInt32(decRoleId)
                 };
+                //UserListSearchDTO userSearchDto = new UserListSearchDTO
+                //{
+                //    RoleId = Convert.ToInt32(sendData)
+                //};
                 Response<List<UserDataDTO>> userDetailsDto = await _accountService.GetUsersList(userSearchDto);
                 return Ok(userDetailsDto);
             }

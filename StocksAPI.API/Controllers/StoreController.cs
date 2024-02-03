@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using StocksAPI.API.Utilities;
 using StocksAPI.CORE.Interfaces.Services;
 using StocksAPI.CORE.Models.DTOs;
-using StocksAPI.SERVICES.Services;
 
 namespace StocksAPI.API.Controllers
 {
@@ -13,29 +10,28 @@ namespace StocksAPI.API.Controllers
     [Route("[controller]/[action]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "Stocks")]
-    public class RoleController : ControllerBase
+    public class StoreController : ControllerBase
     {
-        private readonly IRoleService _roleService;
+        private readonly IStoreService _storeService;
         private readonly IConfiguration _config;
-        public RoleController(IRoleService roleService, IConfiguration config)
+        public StoreController(IStoreService storeService, IConfiguration config)
         {
-            _roleService = roleService;
+            _storeService = storeService;
             _config = config;
         }
 
-        [HttpGet(Name = "GetAllRoles")]
-        public async Task<IActionResult> GetAllRoles()
+        [HttpGet(Name = "GetAllStores")]
+        public async Task<IActionResult> GetAllStores()
         {
             try
             {
-                Response<List<RoleListDTO>> rolesDto = await _roleService.GetRolesList();
-                return Ok(rolesDto);
+                Response<List<StoreListDTO>> storesDto = await _storeService.GetStoresList();
+                return Ok(storesDto);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }

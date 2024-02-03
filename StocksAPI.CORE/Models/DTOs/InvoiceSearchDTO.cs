@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace StocksAPI.CORE.Models.DTOs
 {
-    internal class InvoiceDTO
+    public class InvoiceSearchDTO
     {
+        public int InvoiceId { get; set; }
+    }
+    public class EncInvoiceSearchDTO
+    {
+        public string InvoiceId { get; set; }
     }
 }

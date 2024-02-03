@@ -1,18 +1,21 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace StocksAPI.CORE.Models.Entities
+namespace StocksAPI.CORE.Models.DTOs
 {
-    public partial class InvoiceItem
+    public class InvoiceItemsDTO
     {
-        [Key]
         public int InvoiceDetailsId { get; set; }
         public int InvoiceId { get; set; }
-        public int StoreProductId { get; set; }
+        public string StoreName { get; set; }
+        public string ProductName { get; set; }
         public int Quantity { get; set; }
+        public int UnitId { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
@@ -21,12 +24,5 @@ namespace StocksAPI.CORE.Models.Entities
         public decimal Discount { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Net { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime Datein { get; set; }
-        public bool Deleted { get; set; }
-
-        [ForeignKey("InvoiceId")]
-        [InverseProperty("InvoiceItems")]
-        public virtual Invoice Invoice { get; set; } = null!;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using StocksAPI.CORE.Enums;
-using StocksAPI.CORE.Helpers;
 using StocksAPI.CORE.Interfaces.Repositories;
 using StocksAPI.CORE.Interfaces.Services;
 using StocksAPI.CORE.Models.DTOs;
@@ -9,45 +8,45 @@ using StocksAPI.SERVICES.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace StocksAPI.SERVICES.Services
 {
-    public class ProductService : IProductService
+    public class UnitService : IUnitService
     {
-        private readonly IContextStockRepository<StoreProduct> _productRepository;
+        private readonly IContextStockRepository<ProductUnit> _unitRepository;
         public IMapper _mapper;
-        public ProductService(IMapper mapper, IContextStockRepository<StoreProduct> productRepository)
+        public UnitService(IMapper mapper, IContextStockRepository<ProductUnit> unitRepository)
         {
             _mapper = mapper;
-            _productRepository = productRepository;
+            _unitRepository = unitRepository;
         }
-        public async Task<Response<List<ProductsListDTO>>> GetProductsByStockId(ProductSearchDTO productSearchDto)
+        public async Task<Response<List<UnitsListDTO>>> GetUnitsByProductId(UnitSearchDTO unitSearchDto)
         {
-            Response<List<ProductsListDTO>> response = new Response<List<ProductsListDTO>>();
+            Response<List<UnitsListDTO>> response = new Response<List<UnitsListDTO>>();
             try
             {
-                response.Errors = ValidatorHandler.Validate(productSearchDto, (ProductSearchValidator)Activator.CreateInstance(typeof(ProductSearchValidator)));
+                response.Errors = ValidatorHandler.Validate(unitSearchDto, (UnitSearchValidator)Activator.CreateInstance(typeof(UnitSearchValidator)));
                 if (response.Errors.Any())
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.InvalidParameters;
                     response.IsSucceded = false;
                     return response;
                 }
+
+                string[] includes = new string[] { "Unit" };
+                List<ProductUnit>? unitsList = (List<ProductUnit>?)await _unitRepository.FindAllAsync(e => e.StoreProducts.Where(s=>s.StoreId==unitSearchDto.StoreId).Any()&& e.ProductId==unitSearchDto.ProductId && e.Deleted==false, includes);
                 
-                string [] includes= new string[] { "ProductUnit", "ProductUnit.Product" };
-                List<StoreProduct>? productsList = (List<StoreProduct>?)await _productRepository.FindAllAsync(e => e.StoreId==productSearchDto.StoreId && e.Deleted==false, includes);
-                if (productsList == null || productsList.Count == 0)
+                if (unitsList == null || unitsList.Count == 0)
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;
-                    response.Errors?.Add(new Error() { ErrorMessage = "No products found" });
+                    response.Errors?.Add(new Error() { ErrorMessage = "No units found" });
                     response.IsSucceded = true;
                     return response;
                 }
-                var productListDto = _mapper.Map<List<StoreProduct>, List<ProductsListDTO>>(productsList);
-                response.Data = (List<ProductsListDTO>?)productListDto.DistinctBy(c=>new  { c.ProductId, c.ProductName}).ToList();
+                var unitListDto = _mapper.Map<List<ProductUnit>, List<UnitsListDTO>>(unitsList);
+                response.Data = unitListDto;
                 response.ResponseCode = (int)ResponseCodesEnum.SuccessWithData;
             }
             catch (Exception ex)

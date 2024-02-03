@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace StocksAPI.CORE.Models.DTOs
 {
-    public class ProductsListDTO
+    public class StoreListDTO
     {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; } = null!;
+        public int StoreId { get; set; }
+        public string StoreName { get; set; } = null!;
     }
 }

@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace StocksAPI.SERVICES.Mapper
 {
-    public class RoleDataMapper
+    public class ProductsDataMapper
     {
         public static void ConfigureMapping(IMapperConfigurationExpression mapperConfigs)
         {
-            mapperConfigs.CreateMap<Role, RoleListDTO>()
-                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName))
+            mapperConfigs.CreateMap<StoreProduct, ProductsListDTO>()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductUnit.ProductId))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.ProductUnit.Product.ProductName))
                 .ReverseMap();
         }
     }

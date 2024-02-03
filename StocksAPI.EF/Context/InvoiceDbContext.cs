@@ -58,12 +58,6 @@ namespace StocksAPI.EF.Context
                     .HasForeignKey(d => d.InvoiceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_InvoiceItems_Invoices");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.InvoiceItems)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_InvoiceItems_Products");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -102,11 +96,11 @@ namespace StocksAPI.EF.Context
             {
                 entity.Property(e => e.Datein).HasDefaultValueSql("(getdate())");
 
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.ProductUnit)
                     .WithMany(p => p.StoreProducts)
-                    .HasForeignKey(d => d.ProductId)
+                    .HasForeignKey(d => d.ProductUnitId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StoreProducts_Products");
+                    .HasConstraintName("FK_StoreProducts_ProductUnits");
 
                 entity.HasOne(d => d.Store)
                     .WithMany(p => p.StoreProducts)

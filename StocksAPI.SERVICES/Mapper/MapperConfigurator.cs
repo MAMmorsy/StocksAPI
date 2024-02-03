@@ -9,10 +9,12 @@ namespace StocksAPI.SERVICES.Mapper
         {
             var mapperConfiguration = new MapperConfiguration(mapperConfigs =>
             {
+                ProductsDataMapper.ConfigureMapping(mapperConfigs);
+                RoleDataMapper.ConfigureMapping(mapperConfigs);
+                StoreDataMapper.ConfigureMapping(mapperConfigs);
+                UnitsDataMapper.ConfigureMapping(mapperConfigs);
                 UserDataMapper.ConfigureMapping(mapperConfigs);
-
             });
-
             return mapperConfiguration;
         }
     }

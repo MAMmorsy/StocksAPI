@@ -10,9 +10,7 @@ namespace StocksAPI.CORE.Models.Entities
     {
         public Product()
         {
-            InvoiceItems = new HashSet<InvoiceItem>();
             ProductUnits = new HashSet<ProductUnit>();
-            StoreProducts = new HashSet<StoreProduct>();
         }
 
         [Key]
@@ -24,10 +22,6 @@ namespace StocksAPI.CORE.Models.Entities
         public bool Deleted { get; set; }
 
         [InverseProperty("Product")]
-        public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
-        [InverseProperty("Product")]
         public virtual ICollection<ProductUnit> ProductUnits { get; set; }
-        [InverseProperty("Product")]
-        public virtual ICollection<StoreProduct> StoreProducts { get; set; }
     }
 }

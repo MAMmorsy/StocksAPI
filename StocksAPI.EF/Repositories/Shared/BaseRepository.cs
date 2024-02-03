@@ -5,6 +5,7 @@ using StocksAPI.EF.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq.Expressions;
+using Z.EntityFramework.Plus;
 
 namespace StocksAPI.EF.Repositories.Shared
 {
@@ -82,7 +83,7 @@ namespace StocksAPI.EF.Repositories.Shared
 
             return query.Where(criteria).ToList();
         }
-
+        
         public IEnumerable<T> FindAll(Expression<Func<T, bool>> criteria, int skip, int take)
         {
             return _context.Set<T>().Where(criteria).Skip(skip).Take(take).ToList();
@@ -121,6 +122,18 @@ namespace StocksAPI.EF.Repositories.Shared
             return await query.Where(criteria).ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> FindAllAsync<Y>(Expression<Func<T, bool>> criteria, string[] includes = null, Expression<Func<T, IEnumerable<Y>>> includecriteria=null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            if (includes != null)
+                foreach (var include in includes)
+                    query = query.Include(include);
+            if (includecriteria != null)
+                return await query.IncludeFilter(includecriteria).Where(criteria).ToListAsync();
+            else
+                return await query.Where(criteria).ToListAsync();
+        }
+        
         public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int take, int skip)
         {
             return await _context.Set<T>().Where(criteria).Skip(skip).Take(take).ToListAsync();
