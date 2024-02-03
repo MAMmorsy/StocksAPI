@@ -42,7 +42,8 @@ namespace StocksAPI.SERVICES.Services
                     return response;
                 }
                 Expression<Func<User, bool>> condition = e => e.UserName == loginDto.UserName && e.Password==loginDto.Password && e.Deleted==false;
-                User? loginDataRecords = await _userRepository.FindAsync(condition, null);
+                string[] includes = new string[] { "Role" };
+                User? loginDataRecords = await _userRepository.FindAsync(condition, includes);
                 if (loginDataRecords == null)
                 {
                     response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;

@@ -27,14 +27,17 @@ namespace StocksAPI.API.Controllers
 
         [AllowAnonymous]
         [HttpGet(Name = "UserLogin")]
-        public async Task<IActionResult> UserLogin([FromHeader] string userName, [FromHeader] string password)
+        public async Task<IActionResult> UserLogin([FromHeader] string sendData)
         {
-            userName = EncryptionHelper.DecryptString(userName, _config.GetValue<string>("Pass"));
-            password = EncryptionHelper.DecryptString(password, _config.GetValue<string>("Pass"));
+            var generatedResponce = JsonConvert.DeserializeObject<LoginDto>(sendData);
+            string username = generatedResponce.UserName;
+            string password = generatedResponce.Password;
+            string decUsername = EncryptionHelper.DecryptString(username, _config.GetValue<string>("Pass"));
+            string decPassword = EncryptionHelper.DecryptString(password, _config.GetValue<string>("Pass"));
+            LoginDto loginDto = new LoginDto { UserName = decUsername, Password=decPassword };
             Response<LoginResponseDto> userLoginResponseDto = new Response<LoginResponseDto>();
             try
             {
-                LoginDto loginDto = new LoginDto { UserName = userName, Password=password };
                 Response<LoginUserDataDto> userDetailsDto = await _accountService.LoginUser(loginDto);
                 userLoginResponseDto.ResponseCode = userDetailsDto.ResponseCode;
                 userLoginResponseDto.IsSucceded = userDetailsDto.IsSucceded;
@@ -47,6 +50,8 @@ namespace StocksAPI.API.Controllers
                     token = GenerateToken(details.UserId.ToString(), details.RoleName);
                     LoginResponseDto loginResponseDto = new LoginResponseDto
                     {
+                        DisplayName = details.DisplayName,
+                        RoleName = details.RoleName,
                         Token = token,
                         UserId = details.UserId
                     };
