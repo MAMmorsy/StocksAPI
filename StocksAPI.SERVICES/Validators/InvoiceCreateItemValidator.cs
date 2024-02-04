@@ -40,10 +40,6 @@ namespace StocksAPI.SERVICES.Validators
                 .NotEmpty().WithMessage("Please fill Net")
                 .NotNull().WithMessage("Please fill Net")
             .Must(s => s != 0).WithMessage("Error in Net");
-            RuleFor(m => m.Discount)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Please fill Discount")
-                .NotNull().WithMessage("Please fill Discount");
         }
     }
 }

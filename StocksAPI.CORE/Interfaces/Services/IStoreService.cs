@@ -10,5 +10,6 @@ namespace StocksAPI.CORE.Interfaces.Services
     public interface IStoreService
     {
         Task<Response<List<StoreListDTO>>> GetStoresList();
+        Task<Response<string>> GetStoreProductId(StoreProductSearchDTO storeProductSearchDTO);
     }
 }

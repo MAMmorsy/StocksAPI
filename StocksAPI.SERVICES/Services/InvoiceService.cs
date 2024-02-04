@@ -57,7 +57,7 @@ namespace StocksAPI.SERVICES.Services
                             invoice.Datein = DateTime.Now;
                             invoice.Deleted = false;
                             await _invoiceRepository.AddAsync(invoice);
-                            //response.Data = _unitOfWork.SaveChanges() >= 1;
+                            response.Data = _unitOfWork.SaveChanges() >= 1;
                             invoiceItem.ForEach(e => { e.Datein = DateTime.Now; e.Deleted=false; e.InvoiceId=invoice.InvoiceId; });
                             await _itemRepository.AddRangeAsync(invoiceItem);
                             response.Data = _unitOfWork.SaveChanges() >= 1;
