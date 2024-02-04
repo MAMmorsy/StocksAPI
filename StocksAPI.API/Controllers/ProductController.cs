@@ -35,10 +35,6 @@ namespace StocksAPI.API.Controllers
                 {
                     StoreId = Convert.ToInt32(decStoreId)
                 };
-                //ProductSearchDTO productSearchDTO = new ProductSearchDTO
-                //{
-                //    StoreId = Convert.ToInt32(sendData)
-                //};
                 Response<List<ProductsListDTO>> productDetailsDto = await _productService.GetProductsByStockId(productSearchDTO);
                 return Ok(productDetailsDto);
             }
@@ -66,12 +62,6 @@ namespace StocksAPI.API.Controllers
                     StoreId = Convert.ToInt32(decStoreId),
                     UnitId = Convert.ToInt32(decUnitId)
                 };
-                //ProductQuantitySearchDTO productSearchDTO = new ProductQuantitySearchDTO
-                //{
-                //    ProductId = Convert.ToInt32(sendData),
-                //    StoreId = Convert.ToInt32(store),
-                //    UnitId = Convert.ToInt32(unit)
-                //};
                 Response<ProductQuantityListDTO> productDetailsDto = await _productService.GetProductQuantityByStockAndUnit(productSearchDTO);
                 return Ok(productDetailsDto);
             }

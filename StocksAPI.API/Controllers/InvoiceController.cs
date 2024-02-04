@@ -40,7 +40,8 @@ namespace StocksAPI.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost(Name = "GetAllInvoices")]
+
+        [HttpGet(Name = "GetAllInvoices")]
         public async Task<IActionResult> GetAllInvoices()
         {
             try
