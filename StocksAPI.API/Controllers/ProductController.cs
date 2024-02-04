@@ -49,7 +49,7 @@ namespace StocksAPI.API.Controllers
         }
         
         [HttpGet(Name = "GetProductQuantity")]
-        public async Task<IActionResult> GetProductQuantity([FromHeader] string sendData, [FromHeader] string store, [FromHeader] string unit)
+        public async Task<IActionResult> GetProductQuantity([FromHeader] string sendData)
         {
             try
             {
