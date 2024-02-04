@@ -6,6 +6,7 @@ using StocksAPI.API.Utilities;
 using StocksAPI.CORE.Interfaces.Services;
 using StocksAPI.CORE.Models.DTOs;
 using StocksAPI.SERVICES.Services;
+using System.Collections.Generic;
 
 namespace StocksAPI.API.Controllers
 {
@@ -32,6 +33,19 @@ namespace StocksAPI.API.Controllers
                 string decSentData = EncryptionHelper.DecryptString(sendData, _config.GetValue<string>("Pass"));
                 var invoiceCreateDto = JsonConvert.DeserializeObject<InvoiceCreateDTO>(decSentData);
                 Response<bool> response = await _invoiceService.CreateInvoice(invoiceCreateDto);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost(Name = "GetAllInvoices")]
+        public async Task<IActionResult> GetAllInvoices()
+        {
+            try
+            {
+                Response<List<InvoiceDataDTO>> response = await _invoiceService.ViewInvoices();
                 return Ok(response);
             }
             catch (Exception ex)

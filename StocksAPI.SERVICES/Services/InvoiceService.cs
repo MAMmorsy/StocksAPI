@@ -89,5 +89,35 @@ namespace StocksAPI.SERVICES.Services
             }
             return response;
         }
+
+        public async Task<Response<List<InvoiceDataDTO>>> ViewInvoices()
+        {
+            Response<List<InvoiceDataDTO>> response = new Response<List<InvoiceDataDTO>>();
+            try
+            {
+                
+                Expression<Func<Invoice, bool>> condition = e => e.Deleted==false;
+                
+                string[] includes = new string[] { "User" };
+                List<Invoice>? invoicesList = (List<Invoice>?)await _invoiceRepository.FindAllAsync(condition, includes);
+                if (invoicesList == null || invoicesList.Count == 0)
+                {
+                    response.ResponseCode = (int)ResponseCodesEnum.SuccessWithoutData;
+                    response.Errors?.Add(new Error() { ErrorMessage = "No invoices found" });
+                    response.IsSucceded = true;
+                    return response;
+                }
+                var invoiceListDto = _mapper.Map<List<Invoice>, List<InvoiceDataDTO>>(invoicesList);
+                response.Data = invoiceListDto;
+                response.ResponseCode = (int)ResponseCodesEnum.SuccessWithData;
+            }
+            catch (Exception ex)
+            {
+                response.ResponseCode = (int)ResponseCodesEnum.DbException;
+                response.Errors?.Add(new Error() { ErrorMessage = ex.Message });
+                response.IsSucceded = false;
+            }
+            return response;
+        }
     }
 }

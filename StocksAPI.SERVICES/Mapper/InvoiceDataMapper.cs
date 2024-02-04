@@ -23,6 +23,16 @@ namespace StocksAPI.SERVICES.Mapper
                 .ForMember(dest => dest.TotalItems, opt => opt.MapFrom(src => src.TotalItems))
                 .ForMember(dest => dest.TotalDiscount, opt => opt.MapFrom(src => src.TotalDiscount))
                 .ReverseMap();
+            mapperConfigs.CreateMap<Invoice, InvoiceDataDTO>()
+                .ForMember(dest => dest.InvoiceNo, opt => opt.MapFrom(src => src.InvoiceNo))
+                .ForMember(dest => dest.InvoiceDate, opt => opt.MapFrom(src => src.InvoiceDate))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.DisplayName))
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.Total))
+                .ForMember(dest => dest.Taxes, opt => opt.MapFrom(src => src.Taxes))
+                .ForMember(dest => dest.Net, opt => opt.MapFrom(src => src.Net))
+                .ForMember(dest => dest.TotalItems, opt => opt.MapFrom(src => src.TotalItems))
+                .ForMember(dest => dest.TotalDiscount, opt => opt.MapFrom(src => src.TotalDiscount))
+                .ReverseMap();
             mapperConfigs.CreateMap<InvoiceItem, InvoiceItemsCreateDTO>()
                 .ForMember(dest => dest.StoreProductId, opt => opt.MapFrom(src => src.StoreProductId))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
